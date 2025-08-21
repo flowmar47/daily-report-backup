@@ -1,0 +1,101 @@
+2025-06-25 09:23:44,366 - INFO - 🔑 Real-only MyMama scraper initialized
+2025-06-25 09:23:44,366 - INFO - 📧 Username: comfort.uncounted44@mailer.me
+2025-06-25 09:23:44,367 - INFO - 🚀 Starting REAL ALERTS ONLY extraction...
+2025-06-25 09:23:44,367 - INFO - ⚠️ NO fallback data will be provided - only real alerts
+2025-06-25 09:23:45,356 - INFO - 🎯 Accessing MyMama essentials page: https://www.mymama.uk/copy-of-alerts-essentials-1
+2025-06-25 09:23:50,566 - INFO - 🔐 Login required - authenticating...
+2025-06-25 09:23:50,566 - INFO - 🔐 Performing authentication with updated selectors...
+2025-06-25 09:23:50,566 - INFO - Step 1: Clicking .FhIHQq selector...
+2025-06-25 09:23:52,637 - INFO - Step 2: Clicking .ka7snc selector...
+2025-06-25 09:23:54,682 - INFO - Step 3: Entering email in .x88heX selector...
+2025-06-25 09:23:54,692 - INFO - Found email input, filling with: comfort.uncounted44@mailer.me
+2025-06-25 09:23:55,715 - INFO - Step 4: Entering password in .oentmx selector...
+2025-06-25 09:23:55,715 - INFO - Password starts with: 5sqR... (length: 24)
+2025-06-25 09:23:55,726 - INFO - Found password input, filling...
+2025-06-25 09:23:56,745 - INFO - Step 5: Clicking submit .plgTg9 selector...
+2025-06-25 09:24:05,821 - INFO - ✅ Authentication successful!
+2025-06-25 09:24:05,964 - INFO - Configuration encrypted and saved to /home/ohms/OhmsAlertsReports/daily-report/browser_sessions/config.enc
+2025-06-25 09:24:05,965 - INFO - Removed old plaintext session file: /home/ohms/OhmsAlertsReports/daily-report/browser_sessions/mymama_session/session.json
+2025-06-25 09:24:05,965 - INFO - ✅ Session state encrypted and saved to /home/ohms/OhmsAlertsReports/daily-report/browser_sessions/mymama_session/session.enc
+2025-06-25 09:24:05,965 - INFO - 💾 Session state encrypted and saved securely
+2025-06-25 09:24:05,965 - INFO - 💾 Saving new session for future use...
+2025-06-25 09:24:06,083 - INFO - 📜 Scrolling to load ALL content (forex at TOP, options at BOTTOM)...
+2025-06-25 09:24:08,095 - INFO - 📏 Initial page height: 16239px
+2025-06-25 09:24:08,599 - INFO - 📍 At TOP of page (forex section)
+2025-06-25 09:24:13,665 - INFO - 📍 At MIDDLE of page (earnings section)
+2025-06-25 09:24:18,733 - INFO - 📍 At BOTTOM of page (options section)
+2025-06-25 09:24:21,748 - INFO - ✅ Comprehensive scrolling complete - ALL sections should be loaded
+2025-06-25 09:24:24,874 - INFO - 📸 Full page screenshot saved: /home/ohms/OhmsAlertsReports/daily-report/real_alerts_only/fullpage_20250625_092421.png
+2025-06-25 09:24:24,874 - INFO - 🔍 Extracting real alerts data from essentials page...
+2025-06-25 09:24:24,957 - INFO - 💾 Raw data saved: /home/ohms/OhmsAlertsReports/daily-report/real_alerts_only/essentials_html_20250625_092424.html
+2025-06-25 09:24:24,957 - INFO - 📄 Content length: 7594 characters
+2025-06-25 09:24:25,142 - INFO - 🔍 Found EURUSD at line 26
+2025-06-25 09:24:25,142 - INFO - ✅ Extracted EURUSD: SELL
+2025-06-25 09:24:25,142 - INFO - 🔍 Found GBPUSD at line 54
+2025-06-25 09:24:25,142 - INFO - ✅ Extracted GBPUSD: SELL
+2025-06-25 09:24:25,142 - INFO - 🔍 Found USDJPY at line 94
+2025-06-25 09:24:25,142 - INFO - ✅ Extracted USDJPY: BUY
+2025-06-25 09:24:25,143 - INFO - 🔍 Found USDCHF at line 96
+2025-06-25 09:24:25,143 - INFO - ✅ Extracted USDCHF: BUY
+2025-06-25 09:24:25,143 - INFO - 🔍 Found USDCAD at line 284
+2025-06-25 09:24:25,143 - INFO - ✅ Extracted USDCAD: SELL
+2025-06-25 09:24:25,143 - INFO - 🔍 Found AUDUSD at line 211
+2025-06-25 09:24:25,143 - INFO - ✅ Extracted AUDUSD: SELL
+2025-06-25 09:24:25,143 - INFO - 🔍 Found options ticker QQQ at line 474
+2025-06-25 09:24:25,143 - INFO - ✅ Extracted QQQ option data
+2025-06-25 09:24:25,143 - INFO - 🔍 Found options ticker SPY at line 518
+2025-06-25 09:24:25,143 - INFO - ✅ Extracted SPY option data
+2025-06-25 09:24:25,144 - INFO - 🔍 Found options ticker IWM at line 496
+2025-06-25 09:24:25,144 - INFO - ✅ Extracted IWM option data
+2025-06-25 09:24:25,144 - INFO - 🔍 Found options ticker NVDA at line 450
+2025-06-25 09:24:25,144 - INFO - ✅ Extracted NVDA option data
+2025-06-25 09:24:25,144 - INFO - 🔍 Found options ticker TSLA at line 542
+2025-06-25 09:24:25,144 - INFO - ✅ Extracted TSLA option data
+2025-06-25 09:24:25,144 - INFO - 🔍 Found earnings section at line 352
+2025-06-25 09:24:25,144 - INFO - 🔍 Found Premium Swing Trades section at line 356
+2025-06-25 09:24:25,144 - INFO - ✅ Extracted premium swing trades for CMC: Commercial Metals Co.
+2025-06-25 09:24:25,144 - INFO - ✅ Extracted premium swing trades for FDS: FactSet Research Systems
+2025-06-25 09:24:25,144 - INFO - ✅ Extracted premium swing trades for KBH: KB Home
+2025-06-25 09:24:25,145 - INFO - 🔍 Found Premium Day Trades section at line 427
+2025-06-25 09:24:25,145 - INFO - ✅ Extracted premium day trades for CMC: Commercial Metals Co.
+2025-06-25 09:24:25,145 - INFO - ✅ Extracted premium day trades for KBH: KB Home
+2025-06-25 09:24:25,145 - INFO - ✅ Extracted premium day trades for FDS: FactSet
+2025-06-25 09:24:25,145 - INFO - ✅ REAL ALERTS EXTRACTED: 6 forex, 5 options, 0 earnings, 3 swing trades, 3 day trades
+
+============================================================
+REAL-ONLY MYMAMA ALERTS EXTRACTION
+============================================================
+✅ REAL DATA FOUND!
+💱 Forex Alerts: 6
+📊 Options Data: 5
+📈 Earnings Releases: 0
+📊 Swing Trades: 3
+⚡ Day Trades: 3
+
+🎯 FOREX ALERTS:
+   EURUSD: SELL | Entry: 1.1501 | Stop: N/A | Target: N/A
+   GBPUSD: SELL | Entry: 1.3201 | Stop: N/A | Target: N/A
+   USDJPY: BUY | Entry: 0.8499 | Stop: N/A | Target: N/A
+   USDCHF: BUY | Entry: 0.8499 | Stop: N/A | Target: N/A
+   USDCAD: SELL | Entry: 1.4295 | Stop: N/A | Target: N/A
+   AUDUSD: SELL | Entry: .6390 | Stop: N/A | Target: N/A
+
+📈 OPTIONS DATA:
+   QQQ: High: 480.92 | Low: 478.13 | CALL>: 528.09 | PUT<: N/A | TRADE IN PROFIT
+   SPY: High: 536.89 | Low: 409.21 | CALL>: 595.36 | PUT<: N/A | TRADE IN PROFIT
+   IWM: High: 200.58 | Low: 198.83 | CALL>: 209.66 | PUT<: 208.46 | TRADE IN PROFIT
+   NVDA: High: 128.16 | Low: 122.30 | CALL>: 144.31 | PUT<: 143.07 | TRADE IN PROFIT
+   TSLA: High: 479.70 | Low: 258.35 | CALL>: 324.64 | PUT<: N/A | TRADE IN PROFIT
+
+📊 SWING TRADES:
+   CMC (Commercial Metals Co.): N/A
+   FDS (FactSet Research Systems): N/A
+   KBH (KB Home): N/A
+
+⚡ DAY TRADES:
+   CMC (Commercial Metals Co.): N/A
+   KBH (KB Home): N/A
+   FDS (FactSet): N/A
+
+📁 Real data saved to: /home/ohms/OhmsAlertsReports/daily-report/real_alerts_only
+============================================================

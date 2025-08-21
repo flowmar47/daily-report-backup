@@ -1,0 +1,127 @@
+FOREX PAIRS
+
+Pair: EURUSD
+High: 1.1158
+Average: 1.0742
+Low: 1.0238
+MT4 Action: MT4 SELL
+Exit: 1.0850
+
+Pair: GBPUSD
+High: 1.3301
+Average: 1.3046
+Low: 1.2168
+MT4 Action: MT4 SELL
+Exit: 1.2933
+
+Pair: USDJPY
+High: 0.9142
+Average: 0.8842
+Low: 0.8542
+MT4 Action: MT4 BUY
+Exit: 0.8881
+
+Pair: USDCHF
+High: 0.9142
+Average: 0.8842
+Low: 0.8542
+MT4 Action: MT4 BUY
+Exit: 0.8881
+
+Pair: AUDUSD
+High: 0.6943
+Average: 0.6681
+Low: 0.6088
+MT4 Action: MT4 SELL
+Exit: 0.6217
+
+Pair: USDCAD
+High: 1.4571
+Average: 1.4119
+Low: 1.3419
+MT4 Action: MT4 SELL
+Exit: 1.3837​​​​​​​​
+
+PREMIUM SWING TRADES
+
+Monday - Wednesday
+
+RDUS – Radius Recycling, Inc.
+
+    EARNINGS DATE: July 8, 2025 (after market)
+    ANALYSIS: Recycling sector consolidation with elevated volatility expected
+    STRATEGY: Monitor for breakout patterns and position accordingly
+
+LU – Lufax Holding Ltd
+
+    EARNINGS DATE: July 8, 2025 (before open)
+    ANALYSIS: Fintech sector showing renewed interest with regulatory clarity
+    STRATEGY: Consider straddle positioning ahead of earnings announcement
+
+PACS – PACS Group, Inc.
+
+    EARNINGS DATE: July 9, 2025 (after market)
+    ANALYSIS: Healthcare technology with growth potential in current market
+    STRATEGY: Monitor pre-earnings momentum for swing positioning
+
+PREMIUM DAY TRADES
+
+Monday - Wednesday
+
+RDUS – Radius Recycling, Inc.
+
+LU – Lufax Holding Ltd
+
+PACS – PACS Group, Inc.
+
+EQUITIES AND OPTIONS
+
+Symbol: QQQ
+52 Week High: 480.92
+52 Week Low: 478.13
+Strike Price:
+
+CALL > 528.09
+
+PUT < N/A
+Status: TRADE IN PROFIT
+
+Symbol: SPY
+52 Week High: 536.89
+52 Week Low: 409.21
+Strike Price:
+
+CALL > 595.36
+
+PUT < N/A
+Status: TRADE IN PROFIT
+
+Symbol: IWM
+52 Week High: 200.58
+52 Week Low: 198.83
+Strike Price:
+
+CALL > 209.66
+
+PUT < 208.46
+Status: TRADE IN PROFIT
+
+Symbol: NVDA
+52 Week High: 128.16
+52 Week Low: 122.30
+Strike Price:
+
+CALL > 144.31
+
+PUT < 143.07
+Status: TRADE IN PROFIT
+
+Symbol: TSLA
+52 Week High: 479.70
+52 Week Low: 258.35
+Strike Price:
+
+CALL > 324.64
+
+PUT < N/A
+Status: TRADE IN PROFIT

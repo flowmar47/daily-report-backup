@@ -1,0 +1,12 @@
+{
+  "timestamp": "2025-05-31T13:39:33.651694",
+  "forex_signals": {},
+  "options_plays": [],
+  "summary": {
+    "total_forex_pairs": 0,
+    "total_options_plays": 0,
+    "data_source": "REAL_ONLY",
+    "collection_success": false
+  },
+  "errors": []
+}

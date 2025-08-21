@@ -1,0 +1,126 @@
+FOREX PAIRS
+
+Pair: EURUSD
+High: 1.1501
+Average: N/A
+Low: N/A
+MT4 Action: MT4 SELL
+Exit: N/A
+
+Pair: GBPUSD
+High: 1.3201
+Average: N/A
+Low: N/A
+MT4 Action: MT4 SELL
+Exit: N/A
+
+Pair: USDJPY
+High: 0.8499
+Average: N/A
+Low: N/A
+MT4 Action: MT4 BUY
+Exit: N/A
+
+Pair: USDCHF
+High: 0.8499
+Average: N/A
+Low: N/A
+MT4 Action: MT4 BUY
+Exit: N/A
+
+Pair: USDCAD
+High: 1.4295
+Average: N/A
+Low: N/A
+MT4 Action: MT4 SELL
+Exit: N/A
+
+Pair: AUDUSD
+High: 0.6390
+Average: N/A
+Low: N/A
+MT4 Action: MT4 SELL
+Exit: N/A
+
+EQUITIES AND OPTIONS
+
+Symbol: QQQ
+52 Week High: 480.92
+52 Week Low: 478.13
+Strike Price:
+
+CALL > 528.09
+
+PUT < N/A
+Status: TRADE IN PROFIT
+
+Symbol: SPY
+52 Week High: 536.89
+52 Week Low: 409.21
+Strike Price:
+
+CALL > 595.36
+
+PUT < N/A
+Status: TRADE IN PROFIT
+
+Symbol: IWM
+52 Week High: 200.58
+52 Week Low: 198.83
+Strike Price:
+
+CALL > 209.66
+
+PUT < 208.46
+Status: TRADE IN PROFIT
+
+Symbol: NVDA
+52 Week High: 128.16
+52 Week Low: 122.30
+Strike Price:
+
+CALL > 144.31
+
+PUT < 143.07
+Status: TRADE IN PROFIT
+
+Symbol: TSLA
+52 Week High: 479.70
+52 Week Low: 258.35
+Strike Price:
+
+CALL > 324.64
+
+PUT < N/A
+Status: TRADE IN PROFIT
+
+PREMIUM SWING TRADES (Monday - Wednesday)
+
+CMC (Commercial Metals Co.)
+Earnings Report: N/A
+Current Price: N/A
+Rationale: N/A
+
+FDS (FactSet Research Systems)
+Earnings Report: N/A
+Current Price: N/A
+Rationale: N/A
+
+KBH (KB Home)
+Earnings Report: N/A
+Current Price: N/A
+Rationale: N/A
+
+PREMIUM DAY TRADES
+
+CMC (Commercial Metals Co.)
+Current Price: N/A
+Entry Strategy: N/A
+
+KBH (KB Home)
+Current Price: N/A
+Entry Strategy: N/A
+
+FDS (FactSet)
+Current Price: N/A
+Entry Strategy: N/A

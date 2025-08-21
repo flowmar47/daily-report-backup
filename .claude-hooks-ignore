@@ -1,0 +1,90 @@
+# Claude Hooks Ignore File
+# Uses gitignore-style syntax to exclude files from hooks
+
+# Environment and credentials
+.env
+.env.*
+*.key
+*credentials*
+config_secrets.json
+
+# Browser sessions and temporary files
+browser_sessions/
+browser_sessions/**
+*.session
+*.tmp
+*.temp
+
+# Logs and monitoring
+logs/
+logs/**
+*.log
+monitor.log
+daily_report.log
+
+# Cache and temporary data
+.cache/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Generated files
+*.generated.*
+*_generated.*
+
+# Large data files
+*.xlsx
+*.csv
+*.json.gz
+data/
+datasets/
+
+# Screenshots and images (potentially sensitive)
+*.png
+*.jpg
+*.jpeg
+screenshots/
+
+# Service and deployment files
+*.service
+docker-compose.yml
+Dockerfile
+
+# Financial data specific exclusions
+# Any files containing actual trading data or API responses
+mymama_response.html
+alerts_data.json
+trading_signals.json
+market_data.json
+
+# Backup files
+*.bak
+*.backup
+backup_*
+
+# Test fixtures that might contain sensitive data
+fixtures/
+test_data/
+sample_data/
+
+# Documentation that might contain sensitive info
+README_private.md
+SECRETS.md
+API_KEYS.md

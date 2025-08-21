@@ -1,0 +1,1 @@
+"""Signals package for forex trading analysis"""

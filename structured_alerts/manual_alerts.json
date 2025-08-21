@@ -1,0 +1,61 @@
+{
+  "metadata": {
+    "source": "MyMama.uk",
+    "last_updated": "2025-06-23T14:27:00.022484",
+    "data_type": "manual_entry",
+    "notes": "Update this file with real MyMama alerts data"
+  },
+  "forex_signals": {
+    "EURUSD": {
+      "signal": "BUY",
+      "entry": "1.0850",
+      "stop_loss": "1.0820",
+      "take_profit": "1.0900",
+      "confidence": "HIGH",
+      "timeframe": "Daily",
+      "last_updated": "2025-06-23T14:27:00.022484"
+    },
+    "GBPUSD": {
+      "signal": "SELL",
+      "entry": "1.2650",
+      "stop_loss": "1.2680",
+      "take_profit": "1.2600",
+      "confidence": "MEDIUM",
+      "timeframe": "Daily",
+      "last_updated": "2025-06-23T14:27:00.022484"
+    },
+    "USDJPY": {
+      "signal": "BUY",
+      "entry": "150.25",
+      "stop_loss": "149.80",
+      "take_profit": "151.00",
+      "confidence": "HIGH",
+      "timeframe": "Daily",
+      "last_updated": "2025-06-23T14:27:00.022484"
+    }
+  },
+  "options_data": [
+    {
+      "ticker": "NVDA",
+      "option_type": "CALL",
+      "strike_price": "850",
+      "expiry": "2024-12-20",
+      "entry_price": "25.50",
+      "target_price": "35.00",
+      "stop_loss": "18.00",
+      "confidence": "HIGH",
+      "last_updated": "2025-06-23T14:27:00.022484"
+    },
+    {
+      "ticker": "TSLA",
+      "option_type": "PUT",
+      "strike_price": "200",
+      "expiry": "2024-12-20",
+      "entry_price": "12.00",
+      "target_price": "18.00",
+      "stop_loss": "8.00",
+      "confidence": "MEDIUM",
+      "last_updated": "2025-06-23T14:27:00.022484"
+    }
+  ]
+}

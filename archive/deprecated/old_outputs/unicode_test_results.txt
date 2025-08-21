@@ -1,0 +1,4 @@
+Before cleaning: 'Why Swing: LU typically sees a ~4–5% move\u200b'
+After cleaning:  'Why Swing: LU typically sees a ~4-5% move'
+Remaining Unicode issues: 0
+Fix successful\!

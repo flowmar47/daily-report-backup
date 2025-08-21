@@ -1,0 +1,23 @@
+{
+  "success": true,
+  "data": {
+    "forex_alerts": [],
+    "swing_trades": [],
+    "day_trades": [],
+    "options_alerts": [],
+    "tables": [],
+    "processed_forecasts": [],
+    "processed_options": [],
+    "processed_stocks": [],
+    "processed_swing": [],
+    "processed_day": [],
+    "processed_earnings": [],
+    "source": "mymama_enhanced",
+    "source_url": null,
+    "extraction_timestamp": null,
+    "processing_timestamp": "2025-06-24T09:38:51.320499",
+    "has_real_data": true
+  },
+  "output_file": "output/enhanced_browserbase/enhanced_browserbase_data_20250624_093851.json",
+  "timestamp": "2025-06-24T09:38:51.321626"
+}

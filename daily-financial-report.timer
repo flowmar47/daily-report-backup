@@ -1,0 +1,13 @@
+[Unit]
+Description=Daily Financial Report Timer - 6 AM PST on weekdays
+Requires=daily-financial-report.service
+
+[Timer]
+# Run Monday-Friday at 6:00 AM PST (14:00 UTC when PST is UTC-8, 13:00 UTC when PDT is UTC-7)
+OnCalendar=Mon-Fri *-*-* 14:00:00
+# Also run at 13:00 UTC to handle PDT
+OnCalendar=Mon-Fri *-*-* 13:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

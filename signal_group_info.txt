@@ -1,0 +1,26 @@
+SIGNAL GROUP CONFIGURATION ISSUE FOUND:
+
+Current Status:
+- You have TWO groups named "Ohms Alerts Reports"
+- Group 1 (OLD): Only has you as a member - this is where messages were being sent
+- Group 2 (CORRECT): Has multiple members but your number is in "pending_requests"
+
+Group Details:
+1. OLD GROUP (messages sent here but no one else to receive):
+   - ID: group.ZmFLQ25IUTBKbWpuNFdpaDdXTjVoVXpYOFZtNGVZZ1lYRGdwMWpMcW0zMD0=
+   - Members: ["+16572463906"] (only you)
+   - Status: Active but empty
+
+2. CORRECT GROUP (where messages should go):
+   - ID: group.cUY1YUE5SHRRMW0wQy9SVGMrSWNvVTQrakluaU00YXlBeVBscUdLUFdMTT0=
+   - Members: 8 other members
+   - Your Status: In "pending_requests" - need to accept invite
+   - Invite Link: https://signal.group/#CjQKINt32QjJxlAbqjC22WE26xbRE9UMcUgCPttd15JxcxjPEhB2LIW5CW8UQpcceUiQ38cF
+
+REQUIRED ACTIONS:
+1. Accept the pending group invite in Signal app for +16572463906
+2. Configuration has been updated to use the correct group ID
+3. Once accepted, messages will be delivered to all members
+
+TEMPORARY WORKAROUND:
+Until you accept the invite, messages will attempt delivery but may not show in group.

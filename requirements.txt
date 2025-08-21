@@ -1,0 +1,155 @@
+# Forex Signals System - Unified Requirements
+# Version: 2.0.0
+
+# ===================================================================
+# Core Dependencies 
+# ===================================================================
+
+# Data Processing and Analysis
+numpy==1.26.4
+pandas==2.2.1
+scipy==1.12.0
+
+# Configuration and Settings
+pydantic==2.6.4
+pydantic-settings==2.2.1
+python-dotenv==1.0.1
+
+# HTTP Clients and API Integration
+requests==2.31.0
+httpx==0.26.0
+requests-cache==1.2.0
+aiohttp==3.9.3
+
+# ===================================================================
+# API and Financial Data Sources
+# ===================================================================
+
+# Primary APIs
+fredapi==0.5.2
+finnhub-python==2.4.20
+alpha-vantage==2.3.1
+yfinance==0.2.28
+
+# Technical Analysis
+TA-Lib==0.4.29
+pandas-ta==0.3.14b0
+
+# ===================================================================
+# Resilience and Error Handling
+# ===================================================================
+
+# Retry and Backoff Logic
+backoff==2.2.1
+tenacity==8.2.3
+ratelimit==2.2.1
+
+# Circuit Breaker Pattern
+pybreaker==0.4.5
+
+# ===================================================================
+# Caching and Performance
+# ===================================================================
+
+# Redis Cache
+redis==5.0.3
+
+# In-Memory Caching
+cachetools==5.3.2
+
+# Task Queue (Optional)
+celery==5.3.6
+
+# ===================================================================
+# Messaging and Notifications
+# ===================================================================
+
+# Telegram Bot API
+python-telegram-bot==20.7
+
+# ===================================================================
+# Logging and Monitoring
+# ===================================================================
+
+# Structured Logging
+structlog==24.1.0
+
+# System Monitoring
+psutil==5.9.8
+
+# ===================================================================
+# Date/Time Handling
+# ===================================================================
+pytz==2024.1
+python-dateutil==2.8.2
+
+# ===================================================================
+# Data Validation and Serialization
+# ===================================================================
+marshmallow==3.20.2
+marshmallow-dataclass==8.6.0
+
+# ===================================================================
+# Web Scraping (Minimal - for fallback only)
+# ===================================================================
+beautifulsoup4==4.12.3
+lxml==5.1.0
+
+# ===================================================================
+# Development Dependencies (Optional - see requirements-dev.txt)
+# ===================================================================
+
+# Testing Framework (Core)
+pytest==8.1.1
+
+# ===================================================================
+# Optional/Fallback Dependencies
+# ===================================================================
+
+# Sentiment Analysis (Optional)
+vaderSentiment==3.3.2
+textblob==0.18.0
+
+# RSS/News Feed Parsing (Optional)
+feedparser==6.0.11
+
+# ===================================================================
+# System and Utilities
+# ===================================================================
+
+# Path manipulation
+pathlib2==2.3.7; python_version < "3.4"
+
+# JSON handling (enhanced)
+ujson==5.9.0
+
+# YAML configuration (optional)
+PyYAML==6.0.1
+
+# ===================================================================
+# Security
+# ===================================================================
+
+# Environment variable validation
+python-decouple==3.8
+
+# Cryptography for secure storage
+cryptography==42.0.2
+
+# ===================================================================
+# Version Constraints and Compatibility
+# ===================================================================
+
+# Ensure Python 3.9+ compatibility
+typing-extensions==4.9.0
+
+# ===================================================================
+# Production Deployment
+# ===================================================================
+
+# WSGI/ASGI servers (if API endpoints added)
+uvicorn==0.27.1
+gunicorn==21.2.0
+
+# Process management
+supervisor==4.2.5
