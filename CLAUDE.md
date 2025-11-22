@@ -302,4 +302,145 @@ cd /home/ohms/OhmsAlertsReports/daily-report && source venv/bin/activate && pyth
 - **Scheduling change**: Moved from systemd to cron for reliability
 - **Enhanced features**: Fallback APIs, price validation, improved analysis
 
-This enhanced system provides professional-grade forex signals based on validated real market data with comprehensive fallback protection and multi-factor analysis.
+---
+
+## Stock Volume Detection System
+
+### Overview
+
+The Stock Volume Detection System monitors equities for unusual trading activity. It integrates with the existing forex signals messaging infrastructure to deliver alerts via Signal and Telegram.
+
+**Main Application**: `stock_volume_detection.py` - Stock volume and extended hours monitoring
+
+### Features
+
+- **Unusual Volume Detection**: Identifies stocks trading at 2x+ their average volume
+- **Pre-Market Monitoring**: 4:00 AM - 9:30 AM ET activity tracking
+- **After-Hours Monitoring**: 4:00 PM - 8:00 PM ET activity tracking
+- **Technical Context**: RSI, support/resistance levels included in alerts
+- **Multi-API Fallbacks**: Uses Finnhub, Alpha Vantage, Twelve Data, Polygon, yfinance
+
+### Stock Alerts Architecture
+
+```
+stock_alerts/
+├── __init__.py                    # Package exports
+├── core/
+│   ├── config.py                  # StockAlertSettings configuration
+│   └── exceptions.py              # Custom exceptions
+├── data/
+│   └── models.py                  # StockQuote, VolumeAlert, ExtendedHoursAlert
+├── detection/
+│   ├── volume_analyzer.py         # Unusual volume detection
+│   └── extended_hours.py          # Pre/after-market monitoring
+├── fetchers/
+│   └── stock_fetcher.py           # Multi-API stock data fetching
+└── messaging/
+    ├── formatter.py               # Alert message formatting
+    └── sender.py                  # Signal/Telegram delivery
+```
+
+### Running the Stock Alerts System
+
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Run full scan (volume + extended hours)
+python stock_volume_detection.py
+
+# Scan specific symbols
+python stock_volume_detection.py --symbols AAPL,NVDA,TSLA,AMD
+
+# Volume scan only
+python stock_volume_detection.py --volume-only
+
+# Extended hours scan only
+python stock_volume_detection.py --extended-only
+
+# Test mode (don't send messages)
+python stock_volume_detection.py --dry-run
+
+# Continuous monitoring (every 5 minutes)
+python stock_volume_detection.py --continuous --interval 300
+
+# Generate market summary
+python stock_volume_detection.py --summary
+
+# Run demo/test script
+python stock_alerts_demo.py
+```
+
+### Stock Alert Configuration
+
+Configure in `.env` file:
+
+```bash
+# Stock watchlist
+STOCK_WATCHLIST=AAPL,MSFT,GOOGL,AMZN,META,NVDA,TSLA,SPY,QQQ,AMD
+
+# Volume thresholds
+UNUSUAL_VOLUME_THRESHOLD=2.0        # 2x average = unusual
+EXTREME_VOLUME_THRESHOLD=5.0        # 5x average = critical
+MIN_VOLUME_FOR_ALERT=100000         # Minimum absolute volume
+
+# Extended hours thresholds
+EXTENDED_HOURS_PRICE_CHANGE_THRESHOLD=2.0   # 2% change minimum
+EXTENDED_HOURS_VOLUME_THRESHOLD=50000       # Minimum extended volume
+```
+
+### Sample Stock Alert Output
+
+```
+STOCK VOLUME ALERTS
+Generated: 2025-01-22 10:30:00
+Alerts: 3
+========================================
+
+[!!] NVDA - UNUSUAL VOLUME
+Price: $875.50 (+2.97%)
+Volume: 50,000,000 (3.3x average)
+RSI(14): 68.5
+Support/Resistance: $820.00 / $900.00
+Analysis: Very high volume, positive price action, near resistance
+----------------------------------------
+
+[!] AMD - UNUSUAL VOLUME
+Price: $178.25 (+1.45%)
+Volume: 85,000,000 (2.1x average)
+RSI(14): 55.2
+Analysis: Elevated volume, positive price action
+----------------------------------------
+
+========================================
+Real-time stock data from validated API sources
+```
+
+### Scheduling Stock Alerts
+
+Add to crontab for automated execution:
+
+```bash
+# Scan for unusual volume during market hours (every 30 minutes)
+*/30 9-16 * * 1-5 cd /path/to/daily-report && source venv/bin/activate && python stock_volume_detection.py --volume-only >> logs/stock_volume_cron.log 2>&1
+
+# Pre-market scan at 8:30 AM ET
+30 8 * * 1-5 cd /path/to/daily-report && source venv/bin/activate && python stock_volume_detection.py --extended-only >> logs/stock_premarket_cron.log 2>&1
+
+# After-hours scan at 5:00 PM ET
+0 17 * * 1-5 cd /path/to/daily-report && source venv/bin/activate && python stock_volume_detection.py --extended-only >> logs/stock_afterhours_cron.log 2>&1
+```
+
+### Stock Alerts vs Forex Signals
+
+| Feature | Forex Signals | Stock Alerts |
+|---------|--------------|--------------|
+| Execution | 6 AM PST daily | On-demand or scheduled |
+| Analysis | Multi-factor (tech/econ/geo) | Volume + price action |
+| Data Sources | 8 fallback APIs | 5 fallback APIs + yfinance |
+| Messaging | Signal + Telegram | Signal + Telegram |
+| Focus | Trading signals with targets | Unusual activity alerts |
+
+---
+
+This enhanced system provides professional-grade forex signals based on validated real market data with comprehensive fallback protection and multi-factor analysis, plus stock volume detection for identifying unusual market activity.
