@@ -1,382 +1,335 @@
-# OhmsAlertsReports - Daily Financial Report Automation
+# Daily Financial Report - API-Based Signal Generation System
 
-A comprehensive financial alerts system that automatically scrapes MyMama.uk for real trading alerts and distributes them via Telegram and Signal messaging platforms.
+A professional forex signal generation system that delivers validated trading signals via Signal and Telegram messaging platforms. The system uses live market data from multiple API sources with intelligent fallback protection.
 
-## 🚀 System Overview
+## System Overview
 
 This system provides:
-- **Automated daily financial reports** (6:00 AM PST weekdays)
-- **Real-time MyMama.uk data scraping** with session persistence
+- **Automated daily forex signals** (6:00 AM PST weekdays)
+- **Live API data retrieval** from 8+ financial data sources
+- **Multi-factor signal analysis** (Technical 75%, Economic 20%, Geopolitical 5%)
+- **3-source price validation** with variance checking
 - **Dual-platform messaging** (Telegram + Signal)
-- **Heatmap generation and distribution**
-- **Robust error handling and retry mechanisms**
-- **Systemd service management** for 24/7 operation
+- **Cron-based scheduling** for reliable execution
 
-## 📁 Cleaned Up Codebase Structure
+## Architecture
+
+### Data Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         Signal Generation Pipeline                       │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐              │
+│  │  API Layer   │───>│   Analysis   │───>│   Signals    │              │
+│  │  (8 sources) │    │   Engine     │    │  Generation  │              │
+│  └──────────────┘    └──────────────┘    └──────────────┘              │
+│         │                   │                    │                       │
+│         v                   v                    v                       │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐              │
+│  │    Price     │    │  Technical   │    │   Message    │              │
+│  │  Validation  │    │  + Economic  │    │  Formatting  │              │
+│  │  (3-source)  │    │  + Sentiment │    │  & Delivery  │              │
+│  └──────────────┘    └──────────────┘    └──────────────┘              │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Directory Structure
 
 ```
 daily-report/
-├── main.py                          # Primary service entry point
-├── service_runner.py                # Service management
-├── config.json                      # Main configuration
-├── .env                            # Environment variables
-├── requirements.txt                 # Python dependencies
-├── real_only_mymama_scraper.py     # Primary MyMama scraper
-├── enhanced_browserbase_scraper.py # Enhanced scraper
-├── messenger_compatibility.py      # Unified messenger interface
+├── enhanced_api_signals_daily.py    # Main entry point
+├── forex_signal_integration.py      # API integration bridge
+├── Signals/                         # Analysis subsystem
+│   ├── src/
+│   │   ├── signal_generator.py      # Multi-factor analysis engine
+│   │   ├── data_fetcher.py          # Multi-API data fetching
+│   │   ├── technical_analysis.py    # RSI, MACD, Bollinger Bands
+│   │   ├── economic_analyzer.py     # Interest rates, indicators
+│   │   ├── sentiment_analyzer.py    # News sentiment analysis
+│   │   ├── price_validator.py       # 3-source price validation
+│   │   ├── rate_limiter.py          # API rate limiting
+│   │   └── report_generator.py      # Output formatting
+│   └── tests/                       # Test suite
 ├── src/
-│   ├── messengers/
-│   │   └── unified_messenger.py    # Unified messaging system
-│   ├── config/
-│   │   └── settings.py             # Configuration management
-│   └── data_processors/
-│       └── template_generator.py   # Message formatting
-├── utils/
-│   └── env_config.py               # Environment configuration
-├── logs/                           # System logs
-├── reports/                        # Generated reports
-├── heatmaps/                       # Generated heatmaps
-└── tests/                          # Test suite
+│   ├── messengers/                  # Messaging integrations
+│   ├── config/                      # Configuration management
+│   └── data_processors/             # Message formatting
+├── logs/                            # Application logs
+└── reports/                         # Generated reports
 ```
 
-## 🛠️ Installation & Setup
+## API Integration
+
+### Data Sources
+
+The system integrates with multiple financial APIs with intelligent fallback protection:
+
+**Primary APIs** (500-800 calls/day):
+- **Alpha Vantage** - Comprehensive forex data
+- **Twelve Data** - Real-time market data
+- **FRED API** - Economic indicators and interest rates
+- **Finnhub** - Market sentiment and news data
+
+**Secondary APIs** (fallback):
+- **Polygon.io** - Professional market data
+- **MarketStack** - Historical and real-time data
+- **ExchangeRate-API** - Currency conversion rates
+
+**Tertiary APIs** (additional fallback):
+- **Fixer.io** - Foreign exchange rates
+- **CurrencyAPI** - Multi-source currency data
+- **FreeCurrencyAPI** - Backup currency rates
+
+### Price Validation
+
+Every price is validated through a 3-source verification process:
+- Prices must agree within acceptable tolerance
+- Real-time validation (no stale data)
+- Automatic failover if primary sources unavailable
+
+## Installation & Setup
 
 ### Prerequisites
 - Python 3.9+
-- Systemd (for service management)
 - Docker (for Signal API)
 
 ### 1. Clone and Setup
+
 ```bash
 cd /home/ohms/OhmsAlertsReports/daily-report
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+pip install -r Signals/requirements.txt
 ```
 
 ### 2. Environment Configuration
+
 Create `.env` file with required credentials:
+
 ```bash
-# MyMama Credentials
-MYMAMA_USERNAME=your_username
-MYMAMA_PASSWORD=your_password
+# API Keys (Primary)
+ALPHA_VANTAGE_API_KEY=your_alpha_vantage_key
+TWELVE_DATA_API_KEY=your_twelve_data_key
+FRED_API_KEY=your_fred_key
+FINNHUB_API_KEY=your_finnhub_key
+
+# API Keys (Fallback)
+POLYGON_API_KEY=your_polygon_key
+MARKETSTACK_API_KEY=your_marketstack_key
+EXCHANGERATE_API_KEY=your_exchangerate_key
+FIXER_API_KEY=your_fixer_key
+CURRENCY_API_KEY=your_currency_api_key
+FREECURRENCY_API_KEY=your_freecurrency_key
 
 # Telegram Configuration
 TELEGRAM_BOT_TOKEN=your_bot_token
 TELEGRAM_GROUP_ID=your_group_id
-TELEGRAM_THREAD_ID=your_thread_id
 
 # Signal Configuration
 SIGNAL_PHONE_NUMBER=+1234567890
 SIGNAL_GROUP_ID=your_signal_group_id
 SIGNAL_API_URL=http://localhost:8080
-
-# Optional Settings
-SIGNAL_CLI_PATH=signal-cli
-CHROME_BINARY_PATH=/usr/bin/chromium-browser
 ```
 
 ### 3. Signal API Setup
+
 ```bash
-# Setup Signal API with Docker
+# Create data directory
+mkdir -p ~/signal-api-data
+
+# Run Signal API container
 sudo docker run -d --name signal-api \
   --restart unless-stopped \
   -p 8080:8080 \
   -v ~/signal-api-data:/home/.local/share/signal-cli \
   -e MODE=native \
   bbernhard/signal-cli-rest-api:latest
-```
 
-### 4. Systemd Service Installation
-```bash
-# Install the service
-sudo cp daily-alerts.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable daily-financial-report.service
-sudo systemctl start daily-financial-report.service
-```
-
-## 🔧 Configuration
-
-### Main Configuration (`config.json`)
-```json
-{
-  "app_settings": {
-    "report_time": "06:00",
-    "timezone": "America/Los_Angeles",
-    "report_days": ["monday", "tuesday", "wednesday", "thursday", "friday"],
-    "max_retries": 3,
-    "retry_delay": 300
-  },
-  "scraping": {
-    "timeout": 60000,
-    "wait_for_network_idle": true,
-    "user_agent": "Mozilla/5.0...",
-    "request_throttling": {
-      "min_delay": 3,
-      "max_delay": 7
-    }
-  },
-  "telegram": {
-    "max_message_length": 4096,
-    "parse_mode": "Markdown",
-    "rate_limit_delay": 1
-  }
-}
-```
-
-## 🚀 Usage
-
-### Manual Report Generation
-```bash
-# Send immediate report
-python send_immediate_report.py
-
-# Send real data only
-python send_real_report_now.py
-
-# Send heatmaps only
-python send_heatmaps_only.py
-```
-
-### Service Management
-```bash
-# Check service status
-sudo systemctl status daily-financial-report.service
-
-# View logs
-sudo journalctl -u daily-financial-report.service -f
-
-# Restart service
-sudo systemctl restart daily-financial-report.service
-
-# Stop service
-sudo systemctl stop daily-financial-report.service
-```
-
-### Testing
-```bash
-# Run comprehensive system test
-python test_current_system.py
-
-# Test individual components
-python test_complete_structured_pipeline.py
-python verify_plaintext_fix.py
-```
-
-## 📊 Monitoring & Health Checks
-
-### System Health Check
-```bash
-# Run health check
-python system_health_check.py
-
-# Check service status
-python service_status.py
-```
-
-### Log Monitoring
-```bash
-# View recent logs
-tail -f logs/daily_report.log
-
-# Check for errors
-grep -i error logs/daily_report.log
-
-# Monitor systemd logs
-sudo journalctl -u daily-financial-report.service --since "1 hour ago"
-```
-
-### Performance Monitoring
-```bash
-# Check system resources
-free -h
-df -h
-ps aux | grep python
-
-# Monitor network connectivity
-curl -s http://localhost:8080/v1/about  # Signal API
-curl -s https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/getMe  # Telegram API
-```
-
-## 🔍 Troubleshooting
-
-### Common Issues
-
-#### 1. Service Not Starting
-```bash
-# Check service status
-sudo systemctl status daily-financial-report.service
-
-# View detailed logs
-sudo journalctl -u daily-financial-report.service -n 50
-
-# Check configuration
-python -c "import json; json.load(open('config.json'))"
-```
-
-#### 2. MyMama Scraping Failures
-```bash
-# Test scraper manually
-python -c "from real_only_mymama_scraper import RealOnlyMyMamaScraper; scraper = RealOnlyMyMamaScraper(); print('Scraper initialized')"
-
-# Check credentials
-echo $MYMAMA_USERNAME
-echo $MYMAMA_PASSWORD
-
-# Test browser setup
-python test_real_authentication.py
-```
-
-#### 3. Messenger Failures
-```bash
-# Test Telegram
-python -c "from messenger_compatibility import TelegramMessenger; tg = TelegramMessenger(); print('Telegram initialized')"
-
-# Test Signal
-python -c "from messenger_compatibility import SignalMessenger; sig = SignalMessenger(); print('Signal initialized')"
-
-# Check Signal API
+# Verify Signal API is running
 curl http://localhost:8080/v1/about
 ```
 
-#### 4. Import Errors
+### 4. Cron Scheduling
+
+The system uses cron for scheduled execution at 6 AM PST on weekdays:
+
 ```bash
-# Check Python path
-python -c "import sys; print('\n'.join(sys.path))"
+# Edit crontab
+crontab -e
 
-# Verify virtual environment
-echo $VIRTUAL_ENV
-which python
-
-# Reinstall dependencies
-pip install -r requirements.txt --force-reinstall
+# Add the following line
+0 6 * * 1-5 cd /home/ohms/OhmsAlertsReports/daily-report && source venv/bin/activate && PYTHONIOENCODING=utf-8 python enhanced_api_signals_daily.py >> logs/enhanced_api_signals_cron.log 2>&1
 ```
 
-### Recovery Procedures
+## Usage
 
-#### Service Recovery
+### Manual Execution
+
 ```bash
-# Restart service
-sudo systemctl restart daily-financial-report.service
-
-# Check if running
-ps aux | grep main.py
-
-# Manual start if needed
+# Full signal generation and delivery
 cd /home/ohms/OhmsAlertsReports/daily-report
 source venv/bin/activate
-nohup python main.py > logs/manual_start.log 2>&1 &
+python enhanced_api_signals_daily.py
+
+# Test analysis without messaging
+python analysis_demo.py
+
+# Quick single-pair analysis
+python quick_analysis_demo.py
 ```
 
-#### Signal API Recovery
+### Testing API Connectivity
+
 ```bash
-# Restart Signal API
-sudo docker restart signal-api
+# Test forex signal integration
+python -c "from forex_signal_integration import ForexSignalIntegration; fsi = ForexSignalIntegration(); print('Setup successful:', fsi.setup_successful)"
 
-# Check container status
-sudo docker ps | grep signal-api
-
-# View container logs
-sudo docker logs signal-api
+# Test full signal generation
+python -c "
+import asyncio
+from forex_signal_integration import ForexSignalIntegration
+async def test():
+    fsi = ForexSignalIntegration()
+    result = await fsi.generate_forex_signals()
+    print('Has real data:', result.get('has_real_data', False))
+    print('Active signals:', result.get('active_signals', 0))
+asyncio.run(test())
+"
 ```
 
-#### Browser Session Recovery
+### Monitoring
+
 ```bash
-# Clear browser sessions
-rm -rf browser_sessions/*
+# View application logs
+tail -f logs/enhanced_api_signals.log
 
-# Clear cache
-rm -rf cache/*
+# View cron execution logs
+tail -f logs/enhanced_api_signals_cron.log
 
-# Restart service
-sudo systemctl restart daily-financial-report.service
+# Check cron schedule
+crontab -l | grep enhanced_api_signals
 ```
 
-## 📈 Performance Optimization
+## Signal Analysis
 
-### Memory Management
-- Browser sessions are automatically cleaned up
-- Log rotation is configured (7 days retention)
-- Cache TTL is set to 1 hour
+### Multi-Factor Analysis
 
-### Rate Limiting
-- Telegram: 1 second delay between messages
-- Signal: 2 second delay between messages
-- MyMama: 3-7 second delay between requests
+The system uses a weighted multi-factor approach:
 
-### Error Handling
-- Circuit breaker protection for messaging platforms
-- Exponential backoff for retries
-- Graceful degradation when services are unavailable
+| Factor | Weight | Components |
+|--------|--------|------------|
+| Technical | 75% | RSI, MACD, Bollinger Bands, candlestick patterns |
+| Economic | 20% | Interest rate differentials, economic indicators |
+| Geopolitical | 5% | Market sentiment, event impact |
 
-## 🔒 Security
+### Signal Categories
 
-### Credential Management
-- All credentials stored in `.env` file
-- File permissions: `chmod 600 .env`
-- No credentials in code or logs
+- **Strong Signal** (Confidence > 0.7): High probability trading opportunity
+- **Medium Signal** (Confidence 0.5-0.7): Moderate probability opportunity
+- **Hold** (Confidence < 0.5): No clear trading signal
 
-### Network Security
-- HTTPS for all API communications
-- User agent rotation for scraping
-- Rate limiting to prevent abuse
+### Output Format
 
-### Data Privacy
-- No PII stored in logs
-- Data anonymization for debugging
-- Secure session management
+```
+FOREX TRADING SIGNALS
+Generated: 2025-08-18 06:00 PST
 
-## 📝 Development
+FOREX PAIRS
 
-### Adding New Messengers
-1. Implement in `src/messengers/unified_messenger.py`
-2. Add compatibility wrapper in `messenger_compatibility.py`
-3. Update configuration in `config.json`
-4. Add tests in `tests/` directory
+Pair: USDJPY
+High: 147.58301
+Average: 147.28301
+Low: 146.98301
+MT4 Action: MT4 BUY
+Exit: 148.28301
+Confidence: 72.5%
+Signal Category: Strong
+Target: 100 pips
+Risk/Reward: 1:2.5
 
-### Adding New Scrapers
-1. Create new scraper class
-2. Implement required methods
-3. Add to `main.py` collection logic
-4. Update error handling
+Enhanced API Analysis - 3 signals
+Real market data from validated sources
+```
 
-### Testing
+## Troubleshooting
+
+### No Signals Generated
+
 ```bash
-# Run all tests
-python -m pytest tests/ -v
+# Check API connectivity
+python -c "from forex_signal_integration import ForexSignalIntegration; fsi = ForexSignalIntegration(); print('Setup:', fsi.setup_successful)"
 
-# Run specific test
-python -m pytest tests/test_unified_suite.py::TestDailyReportSystem -v
+# Test analysis pipeline
+python quick_analysis_demo.py
 
-# Run with coverage
-python -m pytest tests/ --cov=. --cov-report=html
+# Check API keys in .env
+grep -E "(ALPHA_VANTAGE|TWELVE_DATA|FRED|FINNHUB)" .env
 ```
 
-## 📞 Support
+### Rate Limiting Issues
 
-### Log Locations
-- Application logs: `logs/daily_report.log`
-- Systemd logs: `sudo journalctl -u daily-financial-report.service`
-- Docker logs: `sudo docker logs signal-api`
+The system automatically falls back to secondary/tertiary APIs when rate limits are hit. If all APIs are rate limited:
+- Check logs for "Rate limit hit" messages
+- Verify all fallback API keys are configured
+- Wait for rate limit windows to reset
 
-### Debug Mode
-Enable debug logging in `config.json`:
-```json
-{
-  "monitoring": {
-    "log_level": "DEBUG"
-  }
-}
+### Message Delivery Failures
+
+```bash
+# Test Telegram
+curl -s "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/getMe"
+
+# Test Signal API
+curl http://localhost:8080/v1/about
+
+# Check credentials
+grep -E "(TELEGRAM|SIGNAL)" .env
 ```
 
-### Emergency Contacts
-- Service restart: `sudo systemctl restart daily-financial-report.service`
-- Manual report: `python send_immediate_report.py`
-- Health check: `python system_health_check.py`
+## Data Quality Assurance
+
+### Key Principles
+
+- **API-Only Data**: No web scraping or browser automation
+- **Multi-Source Validation**: Prices verified from 3+ sources
+- **Real Data Only**: Zero tolerance for synthetic/fake data
+- **Graceful Failure**: System fails gracefully without real data
+
+### Confidence Scoring
+
+All signals include confidence levels (0.0-1.0 scale):
+- Only signals with confidence >= 0.6 are transmitted
+- Confidence based on indicator agreement and data quality
+- Historical validation against past performance
+
+## Development
+
+### Running Tests
+
+```bash
+# Full analysis demonstration
+python analysis_demo.py
+
+# Quick single-pair test
+python quick_analysis_demo.py
+
+# Test message formatting
+python verify_plaintext_fix.py
+```
+
+### Adding New API Sources
+
+1. Add API credentials to `.env`
+2. Implement fetcher in `Signals/src/data_fetcher.py`
+3. Add to fallback chain in configuration
+4. Update rate limiting in `Signals/src/rate_limiter.py`
 
 ---
 
-**System Status**: ✅ Production Ready  
-**Last Updated**: June 24, 2025  
-**Version**: 2.0 (Cleaned Up Structure) 
+**System Status**: Production Ready
+**Last Updated**: January 2026
+**Version**: 3.0 (API-Based Signal Generation)

@@ -1,12 +1,11 @@
-# OhmsAlertsReports Deployment & Troubleshooting Guide
+# API-Based Signal System - Deployment & Troubleshooting Guide
 
-## 🚀 Production Deployment
+## Production Deployment
 
 ### Prerequisites
 - Ubuntu 20.04+ or Debian 11+
 - Python 3.9+
 - Docker
-- Systemd
 - 2GB+ RAM
 - 10GB+ free disk space
 
@@ -30,15 +29,6 @@ sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-
 sudo chmod +x /usr/local/bin/docker-compose
 ```
 
-#### Install Chrome/Chromium
-```bash
-# For Ubuntu/Debian
-sudo apt install -y chromium-browser
-
-# For ARM64 (Raspberry Pi)
-sudo apt install -y chromium-browser
-```
-
 ### 2. Application Deployment
 
 #### Clone Repository
@@ -54,12 +44,13 @@ python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
+pip install -r Signals/requirements.txt
 ```
 
 #### Configure Environment
 ```bash
 # Copy environment template
-cp env.example .env
+cp .env.template .env
 
 # Edit with your credentials
 nano .env
@@ -67,23 +58,29 @@ nano .env
 
 Required environment variables:
 ```bash
-# MyMama Credentials
-MYMAMA_USERNAME=your_username
-MYMAMA_PASSWORD=your_password
+# API Keys (Primary - Required)
+ALPHA_VANTAGE_API_KEY=your_alpha_vantage_key
+TWELVE_DATA_API_KEY=your_twelve_data_key
+FRED_API_KEY=your_fred_key
+FINNHUB_API_KEY=your_finnhub_key
+
+# API Keys (Fallback - Recommended for reliability)
+POLYGON_API_KEY=your_polygon_key
+MARKETSTACK_API_KEY=your_marketstack_key
+EXCHANGERATE_API_KEY=your_exchangerate_key
+FIXER_API_KEY=your_fixer_key
+CURRENCY_API_KEY=your_currency_api_key
+FREECURRENCY_API_KEY=your_freecurrency_key
+EXCHANGERATES_API_KEY=your_exchangerates_key
 
 # Telegram Configuration
 TELEGRAM_BOT_TOKEN=your_bot_token
 TELEGRAM_GROUP_ID=your_group_id
-TELEGRAM_THREAD_ID=your_thread_id
 
 # Signal Configuration
 SIGNAL_PHONE_NUMBER=+1234567890
 SIGNAL_GROUP_ID=your_signal_group_id
 SIGNAL_API_URL=http://localhost:8080
-
-# Optional Settings
-SIGNAL_CLI_PATH=signal-cli
-CHROME_BINARY_PATH=/usr/bin/chromium-browser
 ```
 
 #### Setup Signal API
@@ -103,59 +100,30 @@ sudo docker run -d --name signal-api \
 curl http://localhost:8080/v1/about
 ```
 
-#### Install Systemd Service
+#### Setup Cron Scheduling
+
+The system uses cron for reliable scheduled execution:
+
 ```bash
-# Copy service file
-sudo cp daily-alerts.service /etc/systemd/system/
+# Edit crontab
+crontab -e
 
-# Reload systemd
-sudo systemctl daemon-reload
+# Add the following line for 6 AM PST execution on weekdays
+0 6 * * 1-5 cd /home/ohms/OhmsAlertsReports/daily-report && source venv/bin/activate && PYTHONIOENCODING=utf-8 python enhanced_api_signals_daily.py >> logs/enhanced_api_signals_cron.log 2>&1
 
-# Enable and start service
-sudo systemctl enable daily-financial-report.service
-sudo systemctl start daily-financial-report.service
+# Verify cron is configured
+crontab -l | grep enhanced_api_signals
 ```
 
-### 3. Monitoring Setup
+### 3. Directory Setup
 
-#### Install Monitoring Dependencies
 ```bash
-cd monitoring
-chmod +x start_monitoring.sh
-./start_monitoring.sh install
-```
+# Create required directories
+mkdir -p logs reports cache output
 
-#### Start Monitoring Dashboard
-```bash
-./start_monitoring.sh start
-```
-
-The dashboard will be available at: http://localhost:5000
-
-#### Setup Monitoring Service (Optional)
-```bash
-# Create monitoring service file
-sudo tee /etc/systemd/system/ohms-monitoring.service > /dev/null <<EOF
-[Unit]
-Description=OhmsAlertsReports Monitoring Dashboard
-After=network.target
-
-[Service]
-Type=simple
-User=ohms
-WorkingDirectory=/home/ohms/OhmsAlertsReports/daily-report
-Environment=PATH=/home/ohms/OhmsAlertsReports/daily-report/venv/bin
-ExecStart=/home/ohms/OhmsAlertsReports/daily-report/venv/bin/python monitoring/dashboard.py
-Restart=always
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Enable and start monitoring service
-sudo systemctl enable ohms-monitoring.service
-sudo systemctl start ohms-monitoring.service
+# Set permissions
+chmod 755 logs reports cache output
+chmod 600 .env
 ```
 
 ### 4. Security Configuration
@@ -164,9 +132,6 @@ sudo systemctl start ohms-monitoring.service
 ```bash
 # Allow SSH
 sudo ufw allow ssh
-
-# Allow monitoring dashboard (if external access needed)
-sudo ufw allow 5000
 
 # Enable firewall
 sudo ufw enable
@@ -180,175 +145,68 @@ chmod 600 .env
 # Secure logs directory
 chmod 755 logs/
 chmod 644 logs/*.log
-
-# Secure configuration files
-chmod 644 config.json
 ```
 
-#### SSL/TLS Setup (Optional)
+## Troubleshooting Guide
+
+### API Issues
+
+#### 1. No Data from APIs
 ```bash
-# Install Certbot
-sudo apt install -y certbot python3-certbot-nginx
-
-# Setup Nginx reverse proxy
-sudo apt install -y nginx
-
-# Create Nginx configuration
-sudo tee /etc/nginx/sites-available/ohms-monitoring > /dev/null <<EOF
-server {
-    listen 80;
-    server_name your-domain.com;
-    
-    location / {
-        proxy_pass http://localhost:5000;
-        proxy_set_header Host \$host;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \$scheme;
-    }
-}
-EOF
-
-# Enable site
-sudo ln -s /etc/nginx/sites-available/ohms-monitoring /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl restart nginx
-
-# Get SSL certificate
-sudo certbot --nginx -d your-domain.com
-```
-
-## 🔧 Troubleshooting Guide
-
-### Service Issues
-
-#### 1. Service Won't Start
-```bash
-# Check service status
-sudo systemctl status daily-financial-report.service
-
-# View detailed logs
-sudo journalctl -u daily-financial-report.service -n 50
-
-# Check configuration
-python -c "import json; json.load(open('config.json'))"
-
-# Test manual start
-cd /home/ohms/OhmsAlertsReports/daily-report
-source venv/bin/activate
-python main.py
-```
-
-**Common Causes:**
-- Missing environment variables
-- Invalid configuration file
-- Permission issues
-- Missing dependencies
-
-**Solutions:**
-```bash
-# Verify environment variables
-source .env && echo "Environment loaded"
-
-# Check Python path
-python -c "import sys; print('\n'.join(sys.path))"
-
-# Reinstall dependencies
-pip install -r requirements.txt --force-reinstall
-
-# Fix permissions
-sudo chown -R ohms:ohms /home/ohms/OhmsAlertsReports
-chmod 600 .env
-```
-
-#### 2. Service Crashes Repeatedly
-```bash
-# Check for memory issues
-free -h
-ps aux | grep python
-
-# Check disk space
-df -h
-
-# View crash logs
-sudo journalctl -u daily-financial-report.service --since "1 hour ago" | grep -i error
-```
-
-**Solutions:**
-```bash
-# Increase system resources
-sudo systemctl set-property daily-financial-report.service MemoryMax=1G
-
-# Add restart policy
-sudo systemctl edit daily-financial-report.service
-# Add:
-# [Service]
-# Restart=always
-# RestartSec=30
-# StartLimitInterval=300
-# StartLimitBurst=5
-```
-
-### Scraping Issues
-
-#### 1. MyMama Authentication Fails
-```bash
-# Test credentials
+# Test API connectivity
 python -c "
-from real_only_mymama_scraper import RealOnlyMyMamaScraper
-scraper = RealOnlyMyMamaScraper()
-print('Scraper initialized successfully')
+from forex_signal_integration import ForexSignalIntegration
+fsi = ForexSignalIntegration()
+print('Setup successful:', fsi.setup_successful)
 "
 
-# Check browser setup
-python test_real_authentication.py
-```
+# Check API keys are set
+grep -E "(ALPHA_VANTAGE|TWELVE_DATA|FRED|FINNHUB)" .env
 
-**Common Causes:**
-- Invalid credentials
-- Website changes
-- Browser compatibility issues
-- Network connectivity problems
-
-**Solutions:**
-```bash
-# Update browser
-sudo apt update && sudo apt install -y chromium-browser
-
-# Clear browser sessions
-rm -rf browser_sessions/*
-
-# Test network connectivity
-curl -I https://mymama.uk
-
-# Update user agent in config.json
-```
-
-#### 2. Scraping Timeouts
-```bash
-# Check network connectivity
-ping -c 4 mymama.uk
-
-# Test with different timeout
+# Test individual API
 python -c "
 import requests
-response = requests.get('https://mymama.uk', timeout=30)
-print(f'Status: {response.status_code}')
+import os
+from dotenv import load_dotenv
+load_dotenv()
+key = os.getenv('ALPHA_VANTAGE_API_KEY')
+resp = requests.get(f'https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=EUR&to_symbol=USD&apikey={key}')
+print('Status:', resp.status_code)
+print('Response:', resp.json().keys() if resp.ok else resp.text[:200])
 "
 ```
 
+**Common Causes:**
+- Missing or invalid API keys
+- API rate limiting
+- Network connectivity issues
+
 **Solutions:**
 ```bash
-# Increase timeout in config.json
-{
-  "scraping": {
-    "timeout": 120000
-  }
-}
+# Verify all API keys in .env
+cat .env | grep -E "API_KEY"
 
-# Add retry logic
-# Update main.py with exponential backoff
+# Check rate limiting logs
+grep -i "rate limit" logs/enhanced_api_signals.log
+
+# Test network connectivity
+curl -I https://www.alphavantage.co
+curl -I https://api.twelvedata.com
 ```
+
+#### 2. Rate Limiting
+```bash
+# Check for rate limit errors
+grep -i "429\|rate limit" logs/enhanced_api_signals.log
+
+# View API usage patterns
+grep -E "API|request|response" logs/enhanced_api_signals.log | tail -50
+```
+
+**Solutions:**
+- The system automatically falls back to secondary/tertiary APIs
+- Ensure all fallback API keys are configured
+- Consider upgrading API tier for higher limits
 
 ### Messenger Issues
 
@@ -359,6 +217,11 @@ curl -s "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/getMe"
 
 # Test bot permissions
 curl -s "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/getChat?chat_id=$TELEGRAM_GROUP_ID"
+
+# Send test message
+curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" \
+  -d "chat_id=$TELEGRAM_GROUP_ID" \
+  -d "text=Test message from deployment check"
 ```
 
 **Common Causes:**
@@ -369,14 +232,13 @@ curl -s "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/getChat?chat_id=$TELEGR
 
 **Solutions:**
 ```bash
-# Verify bot token
-echo $TELEGRAM_BOT_TOKEN
+# Verify bot token format
+echo $TELEGRAM_BOT_TOKEN | grep -E "^[0-9]+:[A-Za-z0-9_-]+$"
 
-# Add bot to group with admin permissions
 # Check group ID format (should start with - for groups)
+echo $TELEGRAM_GROUP_ID
 
-# Implement rate limiting
-# Add delays between messages
+# Implement rate limiting delays between messages
 ```
 
 #### 2. Signal Failures
@@ -388,12 +250,12 @@ curl http://localhost:8080/v1/about
 sudo docker ps | grep signal-api
 
 # View container logs
-sudo docker logs signal-api
+sudo docker logs signal-api --tail 50
 ```
 
 **Common Causes:**
 - Signal API not running
-- Invalid phone number
+- Invalid phone number format
 - Group not found
 - Authentication issues
 
@@ -402,7 +264,7 @@ sudo docker logs signal-api
 # Restart Signal API
 sudo docker restart signal-api
 
-# Verify phone number format
+# Verify phone number format (must include country code)
 echo $SIGNAL_PHONE_NUMBER
 
 # Check group ID
@@ -410,6 +272,41 @@ echo $SIGNAL_GROUP_ID
 
 # Re-register device if needed
 sudo docker exec signal-api signal-cli -a $SIGNAL_PHONE_NUMBER register
+```
+
+### Scheduling Issues
+
+#### 1. Cron Not Executing
+```bash
+# Check cron is running
+sudo systemctl status cron
+
+# Check crontab
+crontab -l
+
+# Check cron logs
+grep CRON /var/log/syslog | tail -20
+```
+
+**Solutions:**
+```bash
+# Restart cron service
+sudo systemctl restart cron
+
+# Test manual execution
+cd /home/ohms/OhmsAlertsReports/daily-report && source venv/bin/activate && python enhanced_api_signals_daily.py
+```
+
+#### 2. Timezone Issues
+```bash
+# Check system timezone
+timedatectl
+
+# Set timezone to PST
+sudo timedatectl set-timezone America/Los_Angeles
+
+# Verify
+date
 ```
 
 ### Performance Issues
@@ -429,35 +326,22 @@ print(f'Memory: {process.memory_info().rss / 1024 / 1024:.1f} MB')
 
 **Solutions:**
 ```bash
-# Optimize browser sessions
-# Add session cleanup in main.py
+# Kill any zombie processes
+pkill -f enhanced_api_signals
 
-# Implement memory monitoring
-# Add memory limits in systemd service
+# Clear cache
+rm -rf cache/*
 
-# Use headless browser mode
-# Update config.json
+# Restart with fresh state
 ```
 
-#### 2. High CPU Usage
+#### 2. Slow API Responses
 ```bash
-# Monitor CPU usage
-top -p $(pgrep -f main.py)
+# Test API response times
+time curl -s "https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=EUR&to_symbol=USD&apikey=$ALPHA_VANTAGE_API_KEY" > /dev/null
 
-# Check for infinite loops
-strace -p $(pgrep -f main.py) -e trace=network
-```
-
-**Solutions:**
-```bash
-# Add CPU limits
-sudo systemctl set-property daily-financial-report.service CPUQuota=50%
-
-# Optimize scraping intervals
-# Add delays between requests
-
-# Use async operations
-# Implement connection pooling
+# Check network latency
+ping -c 4 www.alphavantage.co
 ```
 
 ### Network Issues
@@ -465,10 +349,10 @@ sudo systemctl set-property daily-financial-report.service CPUQuota=50%
 #### 1. Connection Timeouts
 ```bash
 # Test DNS resolution
-nslookup mymama.uk
+nslookup www.alphavantage.co
 
 # Test connectivity
-curl -v --connect-timeout 10 https://mymama.uk
+curl -v --connect-timeout 10 https://www.alphavantage.co
 
 # Check firewall
 sudo ufw status
@@ -482,97 +366,17 @@ echo "nameserver 8.8.8.8" | sudo tee -a /etc/resolv.conf
 # Configure proxy if needed
 export HTTP_PROXY=http://proxy:port
 export HTTPS_PROXY=http://proxy:port
-
-# Add retry logic with exponential backoff
 ```
 
-#### 2. SSL/TLS Issues
-```bash
-# Test SSL connection
-openssl s_client -connect mymama.uk:443
-
-# Check certificate
-echo | openssl s_client -servername mymama.uk -connect mymama.uk:443 2>/dev/null | openssl x509 -noout -dates
-```
-
-**Solutions:**
-```bash
-# Update CA certificates
-sudo apt update-ca-certificates
-
-# Disable SSL verification (not recommended for production)
-# Add verify=False to requests calls
-
-# Use custom SSL context
-# Implement certificate pinning
-```
-
-### Monitoring Issues
-
-#### 1. Dashboard Not Accessible
-```bash
-# Check if dashboard is running
-ps aux | grep dashboard.py
-
-# Check port availability
-netstat -tuln | grep 5000
-
-# Test local access
-curl http://localhost:5000
-```
-
-**Solutions:**
-```bash
-# Restart monitoring
-cd monitoring
-./start_monitoring.sh restart
-
-# Check firewall
-sudo ufw allow 5000
-
-# Check logs
-tail -f logs/monitoring.log
-```
-
-#### 2. Metrics Not Updating
-```bash
-# Check metrics collection
-curl http://localhost:5000/api/metrics
-
-# Check systemd permissions
-sudo systemctl status daily-financial-report.service
-```
-
-**Solutions:**
-```bash
-# Fix permissions
-sudo usermod -aG systemd ohms
-
-# Restart monitoring service
-sudo systemctl restart ohms-monitoring.service
-
-# Check Python dependencies
-pip install psutil flask requests
-```
-
-## 📊 Performance Optimization
+## Performance Optimization
 
 ### Memory Optimization
 ```bash
 # Monitor memory usage
 watch -n 5 'free -h && echo "---" && ps aux | grep python | grep -v grep'
 
-# Set memory limits
-sudo systemctl set-property daily-financial-report.service MemoryMax=1G MemorySwapMax=2G
-```
-
-### CPU Optimization
-```bash
-# Monitor CPU usage
-htop -p $(pgrep -f main.py)
-
-# Set CPU limits
-sudo systemctl set-property daily-financial-report.service CPUQuota=50%
+# Clear old logs
+find logs/ -name "*.log" -mtime +7 -delete
 ```
 
 ### Disk Optimization
@@ -581,7 +385,7 @@ sudo systemctl set-property daily-financial-report.service CPUQuota=50%
 watch -n 10 'df -h && echo "---" && du -sh logs/ reports/'
 
 # Setup log rotation
-sudo tee /etc/logrotate.d/ohms-alerts > /dev/null <<EOF
+sudo tee /etc/logrotate.d/daily-signals > /dev/null <<EOF
 /home/ohms/OhmsAlertsReports/daily-report/logs/*.log {
     daily
     missingok
@@ -594,7 +398,7 @@ sudo tee /etc/logrotate.d/ohms-alerts > /dev/null <<EOF
 EOF
 ```
 
-## 🔒 Security Hardening
+## Security Hardening
 
 ### Network Security
 ```bash
@@ -602,7 +406,6 @@ EOF
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 sudo ufw allow ssh
-sudo ufw allow 5000/tcp
 sudo ufw enable
 
 # Monitor network connections
@@ -615,67 +418,49 @@ sudo netstat -tuln | grep LISTEN
 find /home/ohms/OhmsAlertsReports -type f -name "*.py" -exec chmod 644 {} \;
 find /home/ohms/OhmsAlertsReports -type d -exec chmod 755 {} \;
 chmod 600 .env
-chmod 600 config.json
 
 # Run as non-root user
 sudo chown -R ohms:ohms /home/ohms/OhmsAlertsReports
 ```
 
-### Monitoring Security
-```bash
-# Restrict monitoring access
-sudo ufw deny 5000/tcp
-# Use SSH tunnel instead
-ssh -L 5000:localhost:5000 user@server
-```
-
-## 📞 Emergency Procedures
+## Emergency Procedures
 
 ### Service Recovery
 ```bash
-# Emergency restart
-sudo systemctl stop daily-financial-report.service
-sudo systemctl start daily-financial-report.service
-
-# Manual start if systemd fails
+# Emergency manual execution
 cd /home/ohms/OhmsAlertsReports/daily-report
 source venv/bin/activate
-nohup python main.py > logs/emergency.log 2>&1 &
+python enhanced_api_signals_daily.py 2>&1 | tee logs/emergency.log
 ```
 
 ### Data Recovery
 ```bash
 # Backup configuration
 cp .env .env.backup.$(date +%Y%m%d_%H%M%S)
-cp config.json config.json.backup.$(date +%Y%m%d_%H%M%S)
 
 # Restore from backup
-cp .env.backup.20241224_143022 .env
+cp .env.backup.YYYYMMDD_HHMMSS .env
 ```
 
 ### Complete System Reset
 ```bash
 # Stop all services
-sudo systemctl stop daily-financial-report.service
-sudo systemctl stop ohms-monitoring.service
 sudo docker stop signal-api
 
 # Clear all data
-rm -rf logs/* reports/* browser_sessions/* cache/*
+rm -rf logs/* reports/* cache/*
 
 # Restart services
-sudo systemctl start daily-financial-report.service
-sudo systemctl start ohms-monitoring.service
 sudo docker start signal-api
 ```
 
 ---
 
-**Emergency Contacts:**
-- Service Status: `sudo systemctl status daily-financial-report.service`
-- Manual Report: `python send_immediate_report.py`
-- Health Check: `python system_health_check.py`
-- Monitoring: `http://localhost:5000`
+**Emergency Commands:**
+- Manual Report: `python enhanced_api_signals_daily.py`
+- Check API Status: `python -c "from forex_signal_integration import ForexSignalIntegration; print(ForexSignalIntegration().setup_successful)"`
+- View Logs: `tail -f logs/enhanced_api_signals.log`
+- Cron Status: `crontab -l | grep enhanced_api`
 
-**Last Updated:** December 24, 2024  
-**Version:** 2.0 (Production Ready) 
+**Last Updated:** January 2026
+**Version:** 3.0 (API-Based Signal Generation)
