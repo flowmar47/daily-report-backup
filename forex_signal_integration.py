@@ -1,8 +1,19 @@
 #!/usr/bin/env python3
 """
 Forex Signal Integration Module
-Integrates the Signals system with the daily report messaging system
-CRITICAL: ONLY REAL MARKET DATA ALLOWED - NO FAKE PRICES
+
+Integrates the API-based Signals analysis system with the daily report messaging system.
+This module bridges live market data from multiple API sources (Alpha Vantage, Twelve Data,
+FRED, Finnhub, etc.) to generate professional forex trading signals delivered via Signal
+and Telegram messaging platforms.
+
+Key Features:
+- Multi-factor analysis (Technical 75%, Economic 20%, Geopolitical 5%)
+- 3-source price validation with variance checking
+- Automatic API fallback protection (8 data sources)
+- Professional signal formatting for messaging delivery
+
+CRITICAL: ONLY REAL MARKET DATA ALLOWED - NO SYNTHETIC/FAKE PRICES
 """
 
 import sys
@@ -102,8 +113,8 @@ class ForexSignalIntegration:
                 # Generate text report
                 text_report = self.report_generator.generate_comprehensive_report(signals, 'txt')
                 
-                # Convert signals to expected format
-                formatted_data = self._convert_signals_to_mymama_format(signals, text_report)
+                # Convert signals to messaging format for delivery
+                formatted_data = self._convert_signals_to_messaging_format(signals, text_report)
                 
                 # Enhanced validation of generated data
                 if formatted_data.get('has_real_data') and formatted_data.get('forex_alerts'):
@@ -142,9 +153,9 @@ class ForexSignalIntegration:
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(None, self.generate_forex_signals_sync)
     
-    def _convert_signals_to_mymama_format(self, signals: Dict, text_report: str = None) -> Dict[str, Any]:
+    def _convert_signals_to_messaging_format(self, signals: Dict, text_report: str = None) -> Dict[str, Any]:
         """
-        Convert Signals system output to MyMama-compatible format
+        Convert Signals system output to messaging-compatible format for Signal and Telegram delivery
         """
         try:
             forex_alerts = []
